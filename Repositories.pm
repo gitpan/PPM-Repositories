@@ -1,359 +1,481 @@
 package PPM::Repositories;
 
+use strict;
+use warnings;
+
+use Config qw(%Config);
+
 require Exporter;
 
-use vars qw[ @ISA $VERSION @EXPORT ];
-@ISA = qw( Exporter );
+our @ISA = qw(Exporter);
+our @EXPORT = qw(%Repositories);
+our @EXPORT_OK = qw(get list used_archs);
+our $VERSION = '0.12';
 
-
-@EXPORT = qw(
-	%Repositories
-);
-
-$VERSION = '0.11';
-
-=for COMMENTING_OUT_CAUSE_THESE_YOU_SHOULD_ALREADY_HAVE
-    ASPR => {
-        location  => 'http://ppm-ia.ActiveState.com/PPM/ppmserver.plex?urn:/PPM/Server/SQL',
-        Type      => 'PPMServer 3.0',
-        Active    => 1,
-        Notes     => 'This one you should already have',
-        PerlV     => [],
-        PerlO     => [],
-    },
-    ASPPM2R => {
-        location  => 'http://ppm.ActiveState.com/cgibin/PPM/ppmserver.pl?urn:/PPMServer',
-        Type      => '',
-        Active    => 1,
-        Notes     => '',
-        PerlV     => [],
-        PerlO     => [],
-    },
-
-=cut
-
-%Repositories = (
-    smueller => {
-        location => 'http://steffen-mueller.net/modules/repository/',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Steffen Mueller puts his modules in a repository :)',
-        PerlV     => [ 5.6 ],
-        PerlO     => ['MSWin32'],
-    },
+our %Repositories = (
     bribes => {
         location => 'http://www.bribes.org/perl/ppm/',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Digest::*, Net::Pcap, Win32::* ...',
-        PerlV     => [ 5.6, 5.8 ],
-        PerlO     => ['MSWin32'],
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Bribes de Perl',
+        PerlV    => [ 5.6, 5.8 ],
+        PerlO    => ['MSWin32'],
     },
-    soulcage => {
-        location => 'http://www.soulcage.net/ppds/',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Soulcage.Net MSWin32 Perl archives (Net::SSH::Perl and Net::SSH::W32Perl ...).',
-        PerlV     => [ 5.6 ],
-        PerlO     => ['MSWin32'],
+    devhelp => {
+        location => 'http://ppd.develop-help.com/ppd',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Imager and HTML::Embperl',
+	# this repository contains a mix of 5.6 and 5.8 packages, but
+	# each individual module is for only one of the 2 versions. :(
+        PerlV    => [ 5.6, 5.8 ],
+        PerlO    => ['MSWin32'],
     },
-    soulcage58 => {
-        location => 'http://www.soulcage.net/ppds.58/',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Soulcage.Net MSWin32 Perl archives (Net::SSH::Perl and Net::SSH::W32Perl ...).',
-        PerlV     => [ 5.8 ],
-        PerlO     => ['MSWin32'],
+    gtk2 => {
+        location => 'http://www.lostmind.de/gtk2-perl/ppm/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'gtk2-perl bindings',
+        PerlV    => [ 5.8 ],
+        PerlO    => ['MSWin32'],
+    },
+    'gtk2-old' => {
+        location => 'http://gtk2-perl.sourceforge.net/win32/ppm/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Old "official" Gtk2 repository',
+        PerlV    => [ 5.8 ],
+        PerlO    => ['MSWin32'],
+    },
+    jenda => {
+        location => 'http://jenda.krynicky.cz/perl',
+        Type     => 'Webpage or PPMServer?',
+        Active   => 0,
+        Notes    => 'Jenda\'s modules',
+        PerlV    => [ 5.6, 5.8 ],
+        PerlO    => ['MSWin32'],
     },
     log4perl => {
         location => 'http://log4perl.sourceforge.net/ppm',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'log4perl (pure perl)',
-        PerlV     => [ ],
-        PerlO     => ['perl'],
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'log4perl (pure perl)',
+        PerlV    => [ ],
+        PerlO    => ['perl'],
     },
-    esoft  => {
-        location  => 'ftp://ftp.esoftmatic.com/outgoing/DBI',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'DBI, DBD-Oracle, DBD-ODBC for 5.8',
-        PerlV     => [ 5.8 ],
-        PerlO     => ['MSWin32'],
+    openi => {
+	# stale; last update in Feb 2004
+        location => 'http://openinteract.sourceforge.net/ppmpackages/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Template Toolkit',
+        PerlV    => [ 5.6, 5.8 ],
+        PerlO    => ['MSWin32'],
     },
-    savage => {
-        location  => 'http://savage.net.au/Perl-modules/ppm',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'CGI::Explorer, DBIx::*, etc',
-        PerlV     => [ 5.8 ],
-        PerlO     => ['MSWin32'],
+    roth => {
+        location => 'http://www.roth.net/perl/packages/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Dave Roth\'s modules',
+        PerlV    => [ 5.6, 5.8],
+        PerlO    => ['MSWin32'],
     },
-    spurkis => {
-        location  => 'http://www.epn.ml.org/~spurkis/Agent/repository',
-        Type      => '??',
-        Active    => 0,
-        Notes     => 'GONE FOREVER',
-        PerlV     => [],
-        PerlO     => [],
+    sablot => {
+        location => 'http://ppm.gingerall.cz',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Get your XML::Sablotron here',
+        PerlV    => [ 5.6, 5.8 ],
+        PerlO    => ['MSWin32'],
     },
-    crazy => {
-        location  => 'http://crazyinsomniac.perlmonk.org/perl/ppm',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Maintainer takes requests',
-        PerlV     => [ 5.6 ],
-        PerlO     => ['MSWin32'],
+    tcool => {
+        location => 'http://ppm.tcool.org/server/ppmserver.cgi?urn:PPMServer',
+        Type     => 'PPMServer',
+        Active   => 1,
+        Notes    => 'Kenichi Ishigaki\'s repository (PPM3))',
+        PerlV    => [ 5.8 ],
+        PerlO    => ['MSWin32'],
     },
-    crazy58 => {
-        Name      => 'crazy',
-        location  => 'http://crazyinsomniac.perlmonk.org/perl/ppm/5.8',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Maintainer takes requests',
-        PerlV     => [ 5.8 ],
-        PerlO     => ['MSWin32'],
+    tcoolS => {
+        location => 'http://ppm.tcool.org/archives/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Kenichi Ishigaki\'s repository (PPM4)',
+        PerlV    => [ 5.8 ],
+        PerlO    => ['MSWin32'],
     },
     theory => {
-        location  => 'http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer',
-        Type      => 'PPMServer',
-        Active    => 1,
-        Notes     => 'Get your mod_perl(s) here',
-        PerlV     => [ 5.6 ],
-        PerlO     => ['MSWin32'],
+        location => 'http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer',
+        Type     => 'PPMServer',
+        Active   => 1,
+        Notes    => 'University of Winnipeg: 5.6',
+        PerlV    => [ 5.6 ],
+        PerlO    => ['MSWin32'],
     },
     theoryS => {
-        location  => 'http://theoryx5.uwinnipeg.ca/ppmpackages',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your mod_perl(s) here(SLOWER)',
-        PerlV     => [ 5.6 ],
-        PerlO     => ['MSWin32'],
+        location => 'http://theoryx5.uwinnipeg.ca/ppmpackages',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'University of Winnipeg: 5.6 (slower)',
+        PerlV    => [ 5.6 ],
+        PerlO    => ['MSWin32'],
     },
     theory58 => {
-        location  => 'http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58',
-        Type      => 'PPMServer',
-        Active    => 1,
-        Notes     => 'Get your mod_perl(s) here',
-        PerlV     => [ 5.8 ],
-        PerlO     => ['MSWin32'],
+        location => 'http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58',
+        Type     => 'PPMServer',
+        Active   => 1,
+        Notes    => 'University of Winnipeg: 5.8 (PPM3)',
+        PerlV    => [ 5.8 ],
+        PerlO    => ['MSWin32'],
     },
     theory58S => {
-        location  => 'http://theoryx5.uwinnipeg.ca/ppms',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your mod_perl(s) here(SLOWER)',
-        PerlV     => [ 5.8 ],
-        PerlO     => ['MSWin32'],
+        location => 'http://theoryx5.uwinnipeg.ca/ppms',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'University of Winnipeg: 5.8 (PPM4)',
+        PerlV    => [ 5.8 ],
+        PerlO    => ['MSWin32'],
     },
-    devhelp => {
-        location  => 'http://ppd.develop-help.com/ppd',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your Apache::Session here',
-        PerlV     => [ 5.6 ],
-        PerlO     => ['MSWin32'],
+    theory510 => {
+        location => 'http://cpan.uwinnipeg.ca/PPMPackages/10xx/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'University of Winnipeg: 5.10',
+        PerlV    => [ '5.10' ],
+        PerlO    => ['MSWin32'],
     },
-    dada => {
-        location  => 'http://dada.perl.it/PPM',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your Win32::API here',
-        PerlV     => [ 5.5, 5.6 ],
-        PerlO     => ['MSWin32'],
+    trouchelle58 => {
+        location => 'http://trouchelle.com/ppm/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Trouchelle (PPM3)',
+        PerlV    => [ 5.8 ],
+        PerlO    => ['MSWin32'],
     },
-    rto => {
-        location  => 'http://rto.dk/packages',
-        Type      => 'Webpage',
-        Active    => 0,
-        Notes     => 'GONE (forget what was there)',
-        PerlV     => [ 5.6 ],
-        PerlO     => [],
-    },
-    jenda => {
-        location  => 'http://jenda.krynicky.cz/perl',
-        Type      => 'Webpage or PPMServer?',
-        Active    => 1,
-        Notes     => 'AWSOME (tons of Win32 related stuff by him)',
-        PerlV     => [ 5.6, 5.8 ],
-        PerlO     => ['MSWin32'],
-    },
-#    xray => {
-#        location  => 'http://www.xray.mpe.mpg.de/~ach/ptk/ppm',
-#        Type      => '??',
-#        Active    => 0,
-#        Notes     => 'long gone',
-#        PerlV     => [ 5.6 ],
-#        PerlO     => [],
-#    },
-    openi => {
-        location  => 'http://openinteract.sourceforge.net/ppmpackages',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Template Toolkit!!!',
-        PerlV     => [ 5.6, 5.8 ],
-        PerlO     => ['MSWin32'],
-    },
-    
-    roth => {
-        location  => 'http://www.roth.net/perl/packages',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'More Win32:: stuff',
-        PerlV     => [ 5.5, 5.6, 5.8],
-        PerlO     => ['MSWin32'],
-    },
-
-    sablot => {
-        location  => 'http://ppm.gingerall.cz',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your XML::Sablotron here',
-        PerlV     => [ 5.5, 5.6, 5.8 ],
-        PerlO     => ['MSWin32'],
-    },
-#    perlxml => { # http://rt.cpan.org/NoAuth/Bug.html?id=12761
-#        location  => 'http://www.perlxml.net/PPM',
-#        Type      => 'Webpage',
-#        Active    => 0,
-#        Notes     => 'Get your libxml-perl here. Please note that this is known to disappear for a few days and come back.',
-#        PerlV     => [ 5.6, 5.8 ],
-#        PerlO     => ['MSWin32'],
-#    },
-    datetime => {
-        location  => 'http://datetime.perl.org/download',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your DateTime modules here',
-        PerlV     => [ 5.6, 5.8 ],
-        PerlO     => ['MSWin32'],
-    },
-    gtk => {
-        location  => 'http://gtk2-perl.sourceforge.net/win32/ppm',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your Gtk2 modules here',
-        PerlV     => [ 5.8 ],
-        PerlO     => ['MSWin32'],
+    trouchelle510 => {
+        location => 'http://trouchelle.com/ppm10/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Trouchelle (PPM4)',
+        PerlV    => [ '5.10' ],
+        PerlO    => ['MSWin32'],
     },
 );
 
+#
+# * An undef repo URL defaults to the "packlist" value, which
+#   in turn defaults to the "home" value.
+#
+# * The "packlist" and "arch" keys are implementation details
+#   and are not exposed outside the module.
+#
+my %REPO = (
+    activestate => {
+	home  => 'http://ppm.activestate.com/',
+	desc => 'Default ActivePerl repository from ActiveState',
+	arch => {
+	    # filled in below
+	},
+    },
+    bribes => {
+	home => 'http://www.bribes.org/perl/ppmdir.html',
+	desc => 'Bribes de Perl',
+	packlist => 'http://www.bribes.org/perl/ppm',
+	arch => {
+	    'MSWin32-x86-multi-thread' => undef,
+	    'MSWin32-x86-multi-thread-5.8'  => undef,
+	    'MSWin32-x86-multi-thread-5.10' => undef,
+	},
+    },
+    gtk2 => {
+	home => 'http://www.lostmind.de/gtk2-perl',
+	desc => 'gtk2-perl bindings',
+	packlist => 'http://www.lostmind.de/gtk2-perl/ppm/',
+	arch => {
+	    'MSWin32-x86-multi-thread-5.8' => undef,
+	},
+    },
+    log4perl => {
+	home => 'http://log4perl.sourceforge.net',
+	desc => 'log4perl',
+	packlist => 'http://log4perl.sourceforge.net/ppm',
+	arch => {
+	    'noarch' => undef,
+	},
+    },
+    roth => {
+	home => 'http://www.roth.net/perl/packages/',
+	desc => 'Dave Roth\'s modules',
+	arch => {
+	    'MSWin32-x86-multi-thread' => undef,
+	    'MSWin32-x86-multi-thread-5.8' => undef,
+	},
+    },
+    sablotron => {
+	home => 'http://ppm.gingerall.cz',
+	desc => 'XML::Sablotron',
+	arch => {
+	    'MSWin32-x86-multi-thread' => undef,
+	    'MSWin32-x86-multi-thread-5.8' => undef,
+	},
+    },
+    tcool => {
+	home => 'http://ppm.tcool.org/intro/register',
+	desc => 'Kenichi Ishigaki\'s repository',
+	packlist => 'http://ppm.tcool.org/archives/',
+	arch => {
+	    'MSWin32-x86-multi-thread-5.8' => undef,
+	},
+    },
+    trouchelle => {
+	home  => 'http://trouchelle.com/perl/ppmrepview.pl',
+	desc => 'Trouchelle',
+	arch => {
+	    'MSWin32-x86-multi-thread-5.8' =>
+		'http://trouchelle.com/ppm/',
+	    'MSWin32-x86-multi-thread-5.10' =>
+		'http://trouchelle.com/ppm10/',
+	},
+    },
+    uwinnipeg => {
+	home  => 'http://cpan.uwinnipeg.ca/',
+	desc => 'University of Winnipeg',
+	arch => {
+	    'MSWin32-x86-multi-thread' =>
+		'http://theoryx5.uwinnipeg.ca/ppmpackages/',
+	    'MSWin32-x86-multi-thread-5.8' =>
+		'http://theoryx5.uwinnipeg.ca/ppms/',
+	    'MSWin32-x86-multi-thread-5.10' =>
+		'http://cpan.uwinnipeg.ca/PPMPackages/10xx/',
+	},
+    },
+);
 
+# Add URLs for all ActiveState repos
+for my $arch (qw(
+		 IA64.ARCHREV_0
+		 IA64.ARCHREV_0-LP64
+		 MSWin32-x64
+		 MSWin32-x86
+		 PA-RISC1.1
+		 PA-RISC2.0-LP64
+		 darwin
+		 i686-linux
+		 sun4-solaris
+	        ))
+{
+    my $fullarch = "$arch-thread-multi";
+    $fullarch = "$arch-thread-multi-2level" if $arch =~ /^darwin/;
+    $fullarch = "$arch-multi-thread"        if $arch =~ /^MSWin/;
+
+    unless ($arch eq "MSWin32-x64") {
+	# There is no Win64 5.10 repository
+	$REPO{activestate}{arch}{"$fullarch-5.8"} =
+	    "http://ppm4.activestate.com/$arch/5.8/800/";
+    }
+
+    # There are no HP-UX 5.10 repositories (yet).
+    next if $arch =~ /^(PA-RISC|IA64)/;
+
+    $REPO{activestate}{arch}{"$fullarch-5.10"} =
+	"http://ppm4.activestate.com/$arch/5.10/1000/";
+}
+
+sub _default_arch {
+    my $arch = $Config{archname};
+    if ($] >= 5.008) {
+	$arch .= "-$Config{PERL_REVISION}.$Config{PERL_VERSION}";
+    }
+    return $arch;
+}
+
+sub get {
+    my $name = shift;
+    return () unless exists $REPO{$name};
+
+    my %repo = %{$REPO{$name}};
+    my $arch = shift || _default_arch();
+
+    # Set up "packlist" and "packlist_noarch" keys
+    my $packlist = $repo{packlist} || $repo{home};
+    delete $repo{packlist};
+    if (exists $repo{arch}{$arch}) {
+	$repo{packlist} = $repo{arch}{$arch};
+	$repo{packlist} ||= $packlist;
+    }
+    if (exists $repo{arch}{noarch}) {
+	$repo{packlist_noarch} = $repo{arch}{noarch};
+	$repo{packlist_noarch} ||= $packlist;
+    }
+    delete $repo{arch};
+
+    return %repo;
+}
+
+sub list {
+    my $arch = shift || _default_arch();
+    return sort grep {
+	exists $REPO{$_}{arch}{$arch} or
+        exists $REPO{$_}{arch}{noarch}
+    } keys %REPO;
+}
+
+sub used_archs {
+    my %arch;
+    $arch{$_} = 1 for map keys %{$REPO{$_}{arch}}, keys %REPO;
+    return sort keys %arch;
+}
 
 1;
+
 __END__
 
-=head1 NAME
-
-PPM::Repositories - a list of all I<known> ppm package repositories
+PPM::Repositories - a list of PPM package repositories
 
 =head1 SYNOPSIS
 
-    use PPM::Repositories;
-                                                    #
-    # Print out all *Active* repositories for perl 5.8.x
-                                                    #
-    for my $rep ( keys %Repositories ) {
-        next unless $Repositories{$rep}->{Active};
-        next unless grep { $_ == 5.8 } @{ $Repositories{$rep}->{PerlV} };
-        print $rep,$/,
-            $Repositories{$rep}->{location},$/,
-            $Repositories{$rep}->{Notes},$/,
-            $/;
-# uncomment the following lines to automatically add them to your config if you got PPM 2.x
-#        use PPM;
-#        PPM::AddRepository(
-#            "repository" => $rep,
-#            "location"   => $Repositories{$rep}->{location},
-#            "save" => 'yes');
-#
-# uncomment the following lines to automatically add them to your config if you got PPM 3.x
-#        use PPM::UI;
-#        my $user = '';
-#        my $pass = '';
-#        my $ok = PPM::UI::repository_add($rep, $Repositories{$rep}->{location}, $user, $pass);
-
+    # Print all repositories for all architectures
+    use PPM::Repositories qw(get list used_archs);
+    for my $arch (used_archs()) {
+        print "$arch\n";
+        for my $name (list($arch)) {
+	    my %repo = get($name, $arch);
+	    next unless $repo{packlist};
+	    print "  $name\n";
+	    for my $field (sort keys %repo) {
+	        printf "    %-12s %s\n", $field, $repo{$field};
+            }
+	}
     }
 
 =head1 DESCRIPTION
 
-This is a list of all known ppm repositores (barring the activestate ones).
-Currently, most of them are Win32 specific,
-mainly because the *nix folks have CPAN/CPANPLUS
-as well as free compilers.
+This module contains a list of PPM repositories for Perl 5.6 and later.
+For backwards compatibility reasons it exposes the data in 2 different
+mechanism.
 
-An example entry in C<%Repositories> looks like:
+The new interface uses API functions and is supplied for the benefit
+of PPM version 4 and later.  The old interface directly exposes the
+%Repositories hash and should be used for PPM version 2 and 3.
 
-    datetime => {
-        location  => 'http://datetime.perl.org/download',
-        Type      => 'Webpage',
-        Active    => 1,
-        Notes     => 'Get your DateTime modules here',
-        PerlV     => [ 5.6, 5.8 ],
-        PerlO     => ['MSWin32'],
+=head2 The new interface
+
+The "new" interface is aimed primarily at PPM version 4 users, but also
+contains information about Perl 5.6 and 5.8 repositories that can be
+used by PPM version 2 and 3.
+
+=over
+
+=item get(NAME, ARCH)
+
+The get() function returns a hash describing the NAME repository
+for architecture ARCH. It looks like this:
+
+  (
+    home            => 'http://cpan.example.com/',
+    desc            => 'Example Repository',
+    packlist        => 'http://cpan.example.com/PPMPackages/10xx/',
+    packlist_noarch => 'http://cpan.example.com/PPMPackages/noarch/',
+  )
+
+The C<home> key provides a URL that will display additional information
+about the repository in a browser (for human consumption, not structured
+data for any tools).
+
+The C<desc> key contains a description string, giving either a more
+verbose description of the repository host, or an indication of the
+provided content for more specialized repositories (e.g. C<<
+"gtk2-perl bindings" >>).
+
+The C<packlist> key will point to the repository for the architecture
+ARCH and will only be defined if the repository supports this
+architecture.  Similarly the C<packlist_noarch> key may point to an
+architecture-independent repository hosted by the same system.  Either
+or both of C<packlist> and C<packlist_noarch> may be undefined.
+
+ARCH will default to the current Perl version and architecture (it is
+the same as $Config{archname} under Perl 5.6, and has the major Perl
+version appended for later versions, such as "$Config{archname}-5.8"
+for Perl 5.8).
+
+The get() function will return an empty list if the repository NAME
+does not exist at all.
+
+=item list(ARCH)
+
+The list() function returns a list of names for all repositories that
+contain modules for architecture ARCH.  This will include all
+repositories providing architecture-independent modules as well.
+
+ARCH will default to the current Perl version and architecture.
+
+=item used_archs()
+
+This function returns a list of all architectures that have at least
+one repository recorded in this module.  This list will include the
+pseudo-architecture C<noarch> for architecture-independent modules.
+
+=back
+
+=head2 The old interface
+
+The "old" interface is supported mainly for backwards compatibility. It
+uses the old structure layout, and continues to list SOAP style
+repositories (called "PPMServer") that are no longer supported in PPM
+version 4.
+
+=over
+
+=item %Repositories
+
+An example entry in %Repositories looks like:
+
+    bribes => {
+        location => 'http://www.bribes.org/perl/ppm/',
+        Type     => 'Webpage',
+        Active   => 1,
+        Notes    => 'Digest::*, Net::Pcap, Win32::* ...',
+        PerlV    => [ 5.6, 5.8 ],
+        PerlO    => ['MSWin32'],
     },
 
 The meaning of the key/value pairs should be obvious.
 
-Active is either 1, or 0, and it indicates whether or not
-that particular repository existed (you could reach it via the internet),
-and contained ppm packages, when this module was released.
+Active is either 1, or 0, and it indicates whether or not that
+particular repository was reachable and contained ppm packages at the
+time this module was released.
 
-PerlO is the value of $^O.
-The value 'perl' is used to indicate pure-perl (meaning all OS').
+PerlO is the value of $^O.  See L<perlport> for a list of values for
+this variable.
 
-    $^O values for various operating systems:
-        http://alma.ch/perl/perloses.htm
-        http://crazyinsomniac.perlmonk.org/perl/misc/perloses.htm
-
-
-See the L<SYNOPSIS|/"SYNOPSIS"> for example usage.
-See L<PPM|PPM> for help with ppm.
+=back
 
 =head2 EXPORT
 
-C<%Repositories> is exported by default.
+%Repositories is exported by default.
 
-
-=head2 If you wanna run your own repository
-
-Simply read my repository README
-E<lt>http://crazyinsomniac.perlmonk.org/perl/ppm/README.htmlE<gt>
-or these tutorials:
-
-    113448 ! perltutorial ! HowTo build and distribute a PPMed module for Win32
-        http://perlmonks.org/index.pl?node_id=113448
-        http://perlmonks.thepen.com/113448.html
-
-    How2 - create a PPM distribution 
-        http://jenda.krynicky.cz/perl/PPM.html
-
+get(), list(), and used_archs() are only exported on demand.
 
 =head1 BUGS/ADDITIONS/ETC
 
-Please use
-https://rt.cpan.org/NoAuth/Bugs.html?Dist=PPM-Repositories
-to report I<bugs>/additions/etc
-or send mail to <bug-PPM-Repositories#rt.cpan.org>.
+Please use https://rt.cpan.org/NoAuth/Bugs.html?Dist=PPM-Repositories
+to report bugs, request additions etc.
 
 =head1 AUTHOR
 
-D. H. (PodMaster)
+D.H. (PodMaster)
+
+Maintained since 2008 by Jan Dubois <jand@activestate.com>
 
 =head1 LICENSE
 
 Copyright (c) 2003,2004,2005 by D.H. (PodMaster). All rights reserved.
 
 This module is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself. If you don't know what this means,
-visit http://perl.com/ or http://cpan.org/.
+under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
 L<PPM>, L<PPM::Make>, L<CPANPLUS>, L<CPAN>.
 
 =cut
-
-This is not quite a repository
-#http://softserv.murdoch.edu.au/pub/mswin/Perl/cpans/DBD-Oracle/
-#http://softserv.murdoch.edu.au/pub/mswin/Perl/cpans/DBI/

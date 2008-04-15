@@ -1,11 +1,12 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         PPM-Repositories
-version:      0.11
-version_from: Repositories.pm
-installdirs:  site
-requires:
-    Exporter:                      
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.28
+--- #YAML:1.0
+name:                PPM-Repositories
+version:             0.12
+abstract:            ~
+license:             ~
+author:              ~
+generated_by:        ExtUtils::MakeMaker version 6.42_01
+distribution_type:   module
+requires:     
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
