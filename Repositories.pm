@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Repositories);
 our @EXPORT_OK = qw(get list used_archs);
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 my %Default = (
     Type   => 'Webpage',
@@ -31,7 +31,7 @@ our %Repositories = (
     },
     gtk2 => {
         location => 'http://www.lostmind.de/gtk2-perl/ppm/',
-        Notes    => 'gtk2-perl bindings',
+        Notes    => 'gtk2-perl bindings (check also \'voltar\' repository)',
     },
     'gtk2-old' => {
         location => 'http://gtk2-perl.sourceforge.net/win32/ppm/',
@@ -75,6 +75,15 @@ our %Repositories = (
         location => 'http://ppm.tcool.org/archives/',
         Notes    => 'Kenichi Ishigaki\'s repository (PPM4)',
     },
+    trouchelle58 => {
+        location => 'http://trouchelle.com/ppm/',
+        Notes    => 'Trouchelle: 5.8',
+    },
+    trouchelle510 => {
+        location => 'http://trouchelle.com/ppm10/',
+        Notes    => 'Trouchelle: 5.10',
+        PerlV    => [ '5.10' ],
+    },
     'uwinnipeg56-ppm3' => {
         location => 'http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer',
         Type     => 'PPMServer',
@@ -100,14 +109,9 @@ our %Repositories = (
         Notes    => 'University of Winnipeg: 5.10',
         PerlV    => [ '5.10' ],
     },
-    trouchelle58 => {
-        location => 'http://trouchelle.com/ppm/',
-        Notes    => 'Trouchelle: 5.8',
-    },
-    trouchelle510 => {
-        location => 'http://trouchelle.com/ppm10/',
-        Notes    => 'Trouchelle: 5.10',
-        PerlV    => [ '5.10' ],
+    voltar => {
+        location => 'http://voltar.org/active/5.8/',
+        Notes    => 'Paul Miller\'s Games::RolePlay::MapGen and Gtk2 repository',
     },
     wxansi => {
         location => 'http://www.wxperl.co.uk/repository/ansi',
@@ -163,7 +167,7 @@ my %REPO = (
     },
     gtk2 => {
 	home => 'http://www.lostmind.de/gtk2-perl',
-	desc => 'gtk2-perl bindings',
+	desc => 'gtk2-perl bindings (check also \'voltar\' repository)',
 	packlist => 'http://www.lostmind.de/gtk2-perl/ppm/',
 	arch => {
 	    'MSWin32-x86-multi-thread-5.8' => undef,
@@ -221,6 +225,14 @@ my %REPO = (
 		'http://theoryx5.uwinnipeg.ca/ppms/',
 	    'MSWin32-x86-multi-thread-5.10' =>
 		'http://cpan.uwinnipeg.ca/PPMPackages/10xx/',
+	},
+    },
+    voltar => {
+	home => 'http://voltar.org/active/',
+	desc => 'Paul Miller\'s Games::RolePlay::MapGen and Gtk2 repository',
+	arch => {
+	    'MSWin32-x86-multi-thread-5.8' =>
+		'http://voltar.org/active/5.8/',
 	},
     },
     wxansi => {
