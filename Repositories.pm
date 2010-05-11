@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Repositories);
 our @EXPORT_OK = qw(get list used_archs);
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 my %Default = (
     Type   => 'Webpage',
@@ -113,15 +113,10 @@ our %Repositories = (
         location => 'http://voltar.org/active/5.8/',
         Notes    => 'Paul Miller\'s Games::RolePlay::MapGen and Gtk2 repository',
     },
-    wxansi => {
-        location => 'http://www.wxperl.co.uk/repository/ansi',
-        Notes    => 'ANSI versions of wxPerl modules',
-        PerlV    => [ 5.8, '5.10' ],
-    },
     wxperl => {
         location => 'http://www.wxperl.co.uk/repository',
         Notes    => 'wxPerl modules',
-        PerlV    => [ 5.8, '5.10' ],
+        PerlV    => [ 5.8, '5.10', '5.12' ],
     },
 );
 
@@ -145,6 +140,24 @@ my %REPO = (
 	desc => 'Default ActivePerl repository from ActiveState',
 	arch => {
 	    # filled in below
+	},
+    },
+    bioperl => {
+	home => 'http://www.bioperl.org/wiki/Installing_Bioperl_on_Windows',
+	desc => 'BioPerl - Regular Releases',
+	packlist => 'http://bioperl.org/DIST/',
+	arch => {
+	    'MSWin32-x86-multi-thread-5.8' => undef,
+	    'MSWin32-x86-multi-thread-5.10' => undef,
+	},
+    },
+    'bioperl-rc' => {
+	home => 'http://www.bioperl.org/wiki/Installing_Bioperl_on_Windows',
+	desc => 'BioPerl - Release Candidates',
+	packlist => 'http://bioperl.org/DIST/RC/',
+	arch => {
+	    'MSWin32-x86-multi-thread-5.8' => undef,
+	    'MSWin32-x86-multi-thread-5.10' => undef,
 	},
     },
     bribes => {
@@ -235,22 +248,24 @@ my %REPO = (
 		'http://voltar.org/active/5.8/',
 	},
     },
-    wxansi => {
-	home => 'http://www.wxperl.co.uk/ppm.html',
-	desc => 'ANSI versions of wxPerl modules',
-	packlist => 'http://www.wxperl.co.uk/repository/ansi',
-	arch => {
-	    'MSWin32-x86-multi-thread-5.8' => undef,
-	    'MSWin32-x86-multi-thread-5.10' => undef,
-	},
-    },
     wxperl => {
 	home => 'http://www.wxperl.co.uk/ppm.html',
 	desc => 'wxPerl modules',
 	packlist => 'http://www.wxperl.co.uk/repository',
 	arch => {
-	    'MSWin32-x86-multi-thread-5.8' => undef,
-	    'MSWin32-x86-multi-thread-5.10' => undef,
+	    'MSWin32-x86-multi-thread-5.8'    => undef,
+	    'MSWin32-x86-multi-thread-5.10'   => undef,
+	    'MSWin32-x86-multi-thread-5.12'   => undef,
+	    'MSWin32-x64-multi-thread-5.10'   => undef,
+	    'MSWin32-x64-multi-thread-5.12'   => undef,
+	    'i686-linux-thread-multi-5.8'     => undef,
+	    'i686-linux-thread-multi-5.10'    => undef,
+	    'i686-linux-thread-multi-5.12'    => undef,
+	    'x86_64-linux-thread-multi-5.10'  => undef,
+	    'x86_64-linux-thread-multi-5.12'  => undef,
+	    'darwin-thread-multi-2level-5.8'  => undef,
+	    'darwin-thread-multi-2level-5.10' => undef,
+	    'darwin-thread-multi-2level-5.12' => undef,
 	},
     },
 );
@@ -265,6 +280,7 @@ for my $arch (qw(
 		 PA-RISC2.0-LP64
 		 darwin
 		 i686-linux
+		 x86_64-linux
 		 sun4-solaris
 	        ))
 {
@@ -272,8 +288,8 @@ for my $arch (qw(
     $fullarch = "$arch-thread-multi-2level" if $arch =~ /^darwin/;
     $fullarch = "$arch-multi-thread"        if $arch =~ /^MSWin/;
 
-    unless ($arch eq "MSWin32-x64") {
-	# There is no Win64 5.10 repository
+    unless ($arch eq "MSWin32-x64" || $arch eq "x86_64-linux") {
+	# There are no 64-bit 5.8 repositories
 	$REPO{activestate}{arch}{"$fullarch-5.8"} =
 	    "http://ppm4.activestate.com/$arch/5.8/800/";
     }
@@ -283,6 +299,9 @@ for my $arch (qw(
 
     $REPO{activestate}{arch}{"$fullarch-5.10"} =
 	"http://ppm4.activestate.com/$arch/5.10/1000/";
+
+    $REPO{activestate}{arch}{"$fullarch-5.12"} =
+	"http://ppm4.activestate.com/$arch/5.12/1200/";
 }
 
 sub _default_arch {

@@ -1,8 +1,16 @@
 Revision history for Perl extension PPM::Repositories
 
+0.16 Tue May 11 2010
+    - move test.pl to t/test.t to run it via Test::Harness
+    - remove outdated wxansi repository  [RT#55053]
+    - add additional architectures for wxperl repo [RT#55053]
+    - add ActiveState 64-bit Linux repos
+    - add ActivePerl 5.12 repos
+    - add bioperl and bioperl-rc repos
+
 0.15  Thu Jun 12 2008
-    - add "Paul Miller\'s Games::RolePlay::MapGen and Gtk2 repository"
-      as the "voltar" repository [http://rt.cpan.org/Ticket/Display.html?id=36254]
+    - add "Paul Miller's Games::RolePlay::MapGen and Gtk2 repository"
+      as the "voltar" repository [RT#36254]
     - add note to "gtk2" repo to also check "voltar" repo
 
 0.14  Wed Apr 23 2008
@@ -20,8 +28,8 @@ Revision history for Perl extension PPM::Repositories
     - Add '=head1 NAME' line to properly define the module abstract
 
 0.12  Tue Apr 15 2008
-    - removed smueller repository [http://rt.cpan.org/Ticket/Display.html?id=23979]
-    - removed datetime repository [http://rt.cpan.org/Ticket/Display.html?id=17391]
+    - removed smueller repository [RT#23979]
+    - removed datetime repository [RT#17391]
     - removed dead repositories: soulcage, esoft, savage, spurkis, crazy, dada, rto
     - removed already commented out repositories: xray, perlxml
     - turned jenda's repository to inactive
@@ -33,8 +41,7 @@ Revision history for Perl extension PPM::Repositories
     - added sample scripts in eg/ subdirectory
 
 0.11  Thu May 12 04:46:47 2005
-    - removed some repositories that are gone for good
-      ( http://rt.cpan.org/NoAuth/Bug.html?id=12761 )
+    - removed some repositories that are gone for good [RT#12761]
 
 0.10  Thu May 20 15:30:59 2004
     - updated synopsis
@@ -43,7 +50,7 @@ Revision history for Perl extension PPM::Repositories
     - some PerlO values were wrong (no biggie)
 
 0.08  Sat Mar 13 17:46:29 2004
-    - added smueller, bribes and soulcage/soulcage58 ("bugs" 5367, 5644, 5477 on rt)
+    - added smueller, bribes and soulcage/soulcage58 [RT#5367], [RT#5644], [RT#5477]
 
 0.07  Wed Nov  5 20:02:09 2003
     - I realized the 0.05 Changes never happened (D'oh)
