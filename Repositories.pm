@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Repositories);
 our @EXPORT_OK = qw(get list used_archs);
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 my %Default = (
     Type   => 'Webpage',
@@ -20,14 +20,20 @@ my %Default = (
 );
 
 our %Repositories = (
+    bioperl => {
+        location => 'http://bioperl.org/DIST/',
+        Notes    => 'BioPerl - Regular Releases',
+        PerlV    => [ 5.8, '5.10' ],
+    },
+    'bioperl-rc' => {
+        location => 'http://bioperl.org/DIST/RC/',
+        Notes    => 'BioPerl - Releases Candidates',
+        PerlV    => [ 5.8, '5.10' ],
+    },
     bribes => {
         location => 'http://www.bribes.org/perl/ppm/',
         Notes    => 'Bribes de Perl',
-        PerlV    => [ 5.6, 5.8 ],
-    },
-    devhelp => {
-        location => 'http://ppd.develop-help.com/ppd',
-        Notes    => 'Imager module',
+        PerlV    => [ 5.6, 5.8, '5.10', 5.12 ],
     },
     gtk2 => {
         location => 'http://www.lostmind.de/gtk2-perl/ppm/',
@@ -37,33 +43,15 @@ our %Repositories = (
         location => 'http://gtk2-perl.sourceforge.net/win32/ppm/',
         Notes    => 'Old "official" Gtk2 repository',
     },
-    jenda => {
-        location => 'http://jenda.krynicky.cz/perl',
-        Type     => 'Webpage or PPMServer?',
-        Active   => 0,
-        Notes    => 'Jenda\'s modules',
-        PerlV    => [ 5.6, 5.8 ],
-    },
     log4perl => {
         location => 'http://log4perl.sourceforge.net/ppm',
         Notes    => 'log4perl (pure perl)',
         PerlV    => [ ],
         PerlO    => ['perl'],
     },
-    openi => {
-	# stale; last update in Feb 2004
-        location => 'http://openinteract.sourceforge.net/ppmpackages/',
-        Notes    => 'Template Toolkit',
-        PerlV    => [ 5.6, 5.8 ],
-    },
     roth => {
         location => 'http://www.roth.net/perl/packages/',
         Notes    => 'Dave Roth\'s modules',
-        PerlV    => [ 5.6, 5.8],
-    },
-    sablot => {
-        location => 'http://ppm.gingerall.cz',
-        Notes    => 'Get your XML::Sablotron here',
         PerlV    => [ 5.6, 5.8 ],
     },
     'tcool-ppm3' => {
@@ -83,6 +71,11 @@ our %Repositories = (
         location => 'http://trouchelle.com/ppm10/',
         Notes    => 'Trouchelle: 5.10',
         PerlV    => [ '5.10' ],
+    },
+    trouchelle512 => {
+        location => 'http://trouchelle.com/ppm12/',
+        Notes    => 'Trouchelle: 5.12',
+        PerlV    => [ 5.12 ],
     },
     'uwinnipeg56-ppm3' => {
         location => 'http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer',
@@ -109,6 +102,11 @@ our %Repositories = (
         Notes    => 'University of Winnipeg: 5.10',
         PerlV    => [ '5.10' ],
     },
+    uwinnipeg512 => {
+        location => 'http://cpan.uwinnipeg.ca/PPMPackages/12xx/',
+        Notes    => 'University of Winnipeg: 5.12',
+        PerlV    => [ 5.12 ],
+    },
     voltar => {
         location => 'http://voltar.org/active/5.8/',
         Notes    => 'Paul Miller\'s Games::RolePlay::MapGen and Gtk2 repository',
@@ -116,7 +114,7 @@ our %Repositories = (
     wxperl => {
         location => 'http://www.wxperl.co.uk/repository',
         Notes    => 'wxPerl modules',
-        PerlV    => [ 5.8, '5.10', '5.12' ],
+        PerlV    => [ 5.8, '5.10', 5.12 ],
     },
 );
 
@@ -168,14 +166,7 @@ my %REPO = (
 	    'MSWin32-x86-multi-thread' => undef,
 	    'MSWin32-x86-multi-thread-5.8' => undef,
 	    'MSWin32-x86-multi-thread-5.10' => undef,
-	},
-    },
-    devhelp => {
-	home => 'http://ppd.develop-help.com',
-	desc => 'Imager module',
-	packlist => 'http://ppd.develop-help.com/ppd',
-	arch => {
-	    'MSWin32-x86-multi-thread-5.8' => undef,
+	    'MSWin32-x86-multi-thread-5.12' => undef,
 	},
     },
     gtk2 => {
@@ -202,14 +193,6 @@ my %REPO = (
 	    'MSWin32-x86-multi-thread-5.8' => undef,
 	},
     },
-    sablotron => {
-	home => 'http://ppm.gingerall.cz',
-	desc => 'XML::Sablotron',
-	arch => {
-	    'MSWin32-x86-multi-thread' => undef,
-	    'MSWin32-x86-multi-thread-5.8' => undef,
-	},
-    },
     tcool => {
 	home => 'http://ppm.tcool.org/intro/register',
 	desc => 'Kenichi Ishigaki\'s repository',
@@ -226,6 +209,8 @@ my %REPO = (
 		'http://trouchelle.com/ppm/',
 	    'MSWin32-x86-multi-thread-5.10' =>
 		'http://trouchelle.com/ppm10/',
+	    'MSWin32-x86-multi-thread-5.12' =>
+		'http://trouchelle.com/ppm12/',
 	},
     },
     uwinnipeg => {
@@ -238,6 +223,8 @@ my %REPO = (
 		'http://theoryx5.uwinnipeg.ca/ppms/',
 	    'MSWin32-x86-multi-thread-5.10' =>
 		'http://cpan.uwinnipeg.ca/PPMPackages/10xx/',
+	    'MSWin32-x86-multi-thread-5.12' =>
+		'http://cpan.uwinnipeg.ca/PPMPackages/12xx/',
 	},
     },
     voltar => {
