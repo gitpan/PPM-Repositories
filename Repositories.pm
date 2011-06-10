@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Repositories);
 our @EXPORT_OK = qw(get list used_archs);
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 
 my %Default = (
     Type   => 'Webpage',
@@ -57,7 +57,7 @@ our %Repositories = (
     sisyphusion => {
         location => 'http://www.sisyphusion.tk/ppm/',
         Notes    => 'Math, PDL, Gtk2 and other ad hoc',
-        PerlV    => [ 5.6, 5.8, '5.10', 5.12 ],
+        PerlV    => [ 5.6, 5.8, '5.10', 5.12, 5.14 ],
     },
     'tcool-ppm3' => {
         location => 'http://ppm.tcool.org/server/ppmserver.cgi?urn:PPMServer',
@@ -119,7 +119,7 @@ our %Repositories = (
     wxperl => {
         location => 'http://www.wxperl.co.uk/repository',
         Notes    => 'wxPerl modules',
-        PerlV    => [ 5.8, '5.10', 5.12 ],
+        PerlV    => [ 5.8, '5.10', 5.12, 5.14 ],
     },
 );
 
@@ -206,8 +206,11 @@ my %REPO = (
 	    'MSWin32-x86-multi-thread' => undef,
 	    'MSWin32-x86-multi-thread-5.8' => undef,
 	    'MSWin32-x86-multi-thread-5.10' => undef,
+	    'MSWin32-x64-multi-thread-5.10' => undef,
 	    'MSWin32-x86-multi-thread-5.12' => undef,
 	    'MSWin32-x64-multi-thread-5.12' => undef,
+	    'MSWin32-x86-multi-thread-5.14' => undef,
+	    'MSWin32-x64-multi-thread-5.14' => undef,
 	},
     },
     tcool => {
@@ -260,13 +263,17 @@ my %REPO = (
 	    'MSWin32-x86-multi-thread-5.8'    => undef,
 	    'MSWin32-x86-multi-thread-5.10'   => undef,
 	    'MSWin32-x86-multi-thread-5.12'   => undef,
+	    'MSWin32-x86-multi-thread-5.14'   => undef,
 	    'MSWin32-x64-multi-thread-5.10'   => undef,
 	    'MSWin32-x64-multi-thread-5.12'   => undef,
+	    'MSWin32-x64-multi-thread-5.14'   => undef,
 	    'i686-linux-thread-multi-5.8'     => undef,
 	    'i686-linux-thread-multi-5.10'    => undef,
 	    'i686-linux-thread-multi-5.12'    => undef,
+	    'i686-linux-thread-multi-5.14'    => undef,
 	    'x86_64-linux-thread-multi-5.10'  => undef,
 	    'x86_64-linux-thread-multi-5.12'  => undef,
+	    'x86_64-linux-thread-multi-5.14'  => undef,
 	    'darwin-thread-multi-2level-5.8'  => undef,
 	    'darwin-thread-multi-2level-5.10' => undef,
 	    'darwin-thread-multi-2level-5.12' => undef,
