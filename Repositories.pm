@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Repositories);
 our @EXPORT_OK = qw(get list used_archs);
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 
 my %Default = (
     Type   => 'Webpage',
@@ -33,7 +33,7 @@ our %Repositories = (
     bribes => {
         location => 'http://www.bribes.org/perl/ppm/',
         Notes    => 'Bribes de Perl',
-        PerlV    => [ 5.6, 5.8, '5.10', 5.12 ],
+        PerlV    => [ 5.6, 5.8, '5.10', 5.12, 5.14, 5.16, 5.18 ],
     },
     gtk2 => {
         location => 'http://www.lostmind.de/gtk2-perl/ppm/',
@@ -57,7 +57,7 @@ our %Repositories = (
     sisyphusion => {
         location => 'http://www.sisyphusion.tk/ppm/',
         Notes    => 'Math, PDL, Gtk2 and other ad hoc',
-        PerlV    => [ 5.6, 5.8, '5.10', 5.12, 5.14 ],
+        PerlV    => [ 5.6, 5.8, '5.10', 5.12, 5.14, 5.16, 5.18 ],
     },
     'tcool-ppm3' => {
         location => 'http://ppm.tcool.org/server/ppmserver.cgi?urn:PPMServer',
@@ -82,6 +82,11 @@ our %Repositories = (
         Notes    => 'Trouchelle: 5.12',
         PerlV    => [ 5.12 ],
     },
+    trouchelle514 => {
+        location => 'http://trouchelle.com/ppm14/',
+        Notes    => 'Trouchelle: 5.14',
+        PerlV    => [ 5.14 ],
+    },
     'uwinnipeg56-ppm3' => {
         location => 'http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer',
         Type     => 'PPMServer',
@@ -101,16 +106,19 @@ our %Repositories = (
     uwinnipeg58 => {
         location => 'http://theoryx5.uwinnipeg.ca/ppms',
         Notes    => 'University of Winnipeg: 5.8 (PPM4)',
+		Active   => 0,
     },
     uwinnipeg510 => {
         location => 'http://cpan.uwinnipeg.ca/PPMPackages/10xx/',
         Notes    => 'University of Winnipeg: 5.10',
         PerlV    => [ '5.10' ],
+		Active   => 0,
     },
     uwinnipeg512 => {
         location => 'http://cpan.uwinnipeg.ca/PPMPackages/12xx/',
         Notes    => 'University of Winnipeg: 5.12',
         PerlV    => [ 5.12 ],
+		Active   => 0,
     },
     voltar => {
         location => 'http://voltar.org/active/5.8/',
@@ -119,7 +127,7 @@ our %Repositories = (
     wxperl => {
         location => 'http://www.wxperl.co.uk/repository',
         Notes    => 'wxPerl modules',
-        PerlV    => [ 5.8, '5.10', 5.12, 5.14 ],
+        PerlV    => [ 5.8, '5.10', 5.12, 5.14, 5.16 ],
     },
 );
 
@@ -172,6 +180,9 @@ my %REPO = (
 	    'MSWin32-x86-multi-thread-5.8' => undef,
 	    'MSWin32-x86-multi-thread-5.10' => undef,
 	    'MSWin32-x86-multi-thread-5.12' => undef,
+	    'MSWin32-x86-multi-thread-5.14' => undef,
+	    'MSWin32-x86-multi-thread-5.16' => undef,
+	    'MSWin32-x86-multi-thread-5.18-64int' => undef,
 	},
     },
     gtk2 => {
@@ -206,11 +217,13 @@ my %REPO = (
 	    'MSWin32-x86-multi-thread' => undef,
 	    'MSWin32-x86-multi-thread-5.8' => undef,
 	    'MSWin32-x86-multi-thread-5.10' => undef,
-	    'MSWin32-x64-multi-thread-5.10' => undef,
 	    'MSWin32-x86-multi-thread-5.12' => undef,
 	    'MSWin32-x64-multi-thread-5.12' => undef,
 	    'MSWin32-x86-multi-thread-5.14' => undef,
 	    'MSWin32-x64-multi-thread-5.14' => undef,
+	    'MSWin32-x86-multi-thread-5.16' => undef,
+	    'MSWin32-x86-multi-thread-5.16-64int' => undef,
+	    'MSWin32-x64-multi-thread-5.16' => undef,
 	},
     },
     tcool => {
@@ -231,6 +244,8 @@ my %REPO = (
 		'http://trouchelle.com/ppm10/',
 	    'MSWin32-x86-multi-thread-5.12' =>
 		'http://trouchelle.com/ppm12/',
+	    'MSWin32-x86-multi-thread-5.14' =>
+		'http://trouchelle.com/ppm14/',
 	},
     },
     uwinnipeg => {
@@ -264,55 +279,63 @@ my %REPO = (
 	    'MSWin32-x86-multi-thread-5.10'   => undef,
 	    'MSWin32-x86-multi-thread-5.12'   => undef,
 	    'MSWin32-x86-multi-thread-5.14'   => undef,
+	    'MSWin32-x86-multi-thread-5.16'   => undef,
 	    'MSWin32-x64-multi-thread-5.10'   => undef,
 	    'MSWin32-x64-multi-thread-5.12'   => undef,
-	    'MSWin32-x64-multi-thread-5.14'   => undef,
+            'MSWin32-x64-multi-thread-5.14'   => undef,
+            'MSWin32-x64-multi-thread-5.16'   => undef,
 	    'i686-linux-thread-multi-5.8'     => undef,
 	    'i686-linux-thread-multi-5.10'    => undef,
 	    'i686-linux-thread-multi-5.12'    => undef,
 	    'i686-linux-thread-multi-5.14'    => undef,
+            'i686-linux-thread-multi-5.16'    => undef,
 	    'x86_64-linux-thread-multi-5.10'  => undef,
 	    'x86_64-linux-thread-multi-5.12'  => undef,
 	    'x86_64-linux-thread-multi-5.14'  => undef,
+            'x86_64-linux-thread-multi-5.16'  => undef,
 	    'darwin-thread-multi-2level-5.8'  => undef,
 	    'darwin-thread-multi-2level-5.10' => undef,
 	    'darwin-thread-multi-2level-5.12' => undef,
+	    'darwin-thread-multi-2level-5.14' => undef,
+	    'darwin-thread-multi-2level-5.16' => undef,
 	},
     },
 );
 
 # Add URLs for all ActiveState repos
-for my $arch (qw(
-		 IA64.ARCHREV_0
-		 IA64.ARCHREV_0-LP64
-		 MSWin32-x64
-		 MSWin32-x86
-		 PA-RISC1.1
-		 PA-RISC2.0-LP64
-		 darwin
-		 i686-linux
-		 x86_64-linux
-		 sun4-solaris
-	        ))
+for my $readonly_arch (qw(
+                             MSWin32-x64
+                             MSWin32-x86
+                             darwin
+                             i686-linux
+                             x86_64-linux
+                             sun4-solaris
+                             sun4-solaris-64
+                        ))
 {
+    my $arch = $readonly_arch;
     my $fullarch = "$arch-thread-multi";
     $fullarch = "$arch-thread-multi-2level" if $arch =~ /^darwin/;
     $fullarch = "$arch-multi-thread"        if $arch =~ /^MSWin/;
 
-    unless ($arch eq "MSWin32-x64" || $arch eq "x86_64-linux") {
+    for my $version (8, 10, 12, 14, 16, 18, 20) {
 	# There are no 64-bit 5.8 repositories
-	$REPO{activestate}{arch}{"$fullarch-5.8"} =
-	    "http://ppm4.activestate.com/$arch/5.8/800/";
+        next if $version == 8 && $arch =~ /64/;
+
+        # There are no PPM repos for 5.16 or later for Solaris
+        last if $version == 16 && $arch =~ /^sun4-solaris/;
+
+        # Starting with ActivePerl 5.18 all 32-bit builds use 64-bit ints
+        if ($version == 18 && $arch =~ /^(MSWin32-x86|i686-linux)$/) {
+            $_ .= "-64int" for $arch, $fullarch;
+        }
+
+        # There are no 32-bit PPM repos for 5.20 or later for Linux
+        last if $version == 20 && $arch eq "i686-linux-64int";
+
+        $REPO{activestate}{arch}{"$fullarch-5.$version"} =
+          "http://ppm4.activestate.com/$arch/5.$version/${version}00/";
     }
-
-    # There are no HP-UX 5.10 repositories (yet).
-    next if $arch =~ /^(PA-RISC|IA64)/;
-
-    $REPO{activestate}{arch}{"$fullarch-5.10"} =
-	"http://ppm4.activestate.com/$arch/5.10/1000/";
-
-    $REPO{activestate}{arch}{"$fullarch-5.12"} =
-	"http://ppm4.activestate.com/$arch/5.12/1200/";
 }
 
 sub _default_arch {

@@ -9,3 +9,4 @@ eg/obsolete.pl
 eg/sample.pl
 eg/synopsis.pl
 t/test.t
+META.json                                Module JSON meta-data (added by MakeMaker)
